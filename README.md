@@ -12,17 +12,36 @@ software installation
 ---------------------
 
 - install [ESP-IDF](https://docs.espressif.com/projects/esp-idf/) v5.5 or later
+- CMake 4.0 or later: `CMakeLists.txt` asks for it, but ESP-IDF itself needs only 3.16, so the
+  CMake it installs (3.30 with v5.5) or your system's may well be older - check `cmake --version`
 - fill in your own access points, gateway MACs and target hosts in `main/mcfg.h`
 - the values shipped there are placeholders, not working credentials
 
-how to use it
--------------
+how to build
+------------
 
-- build and flash with
+the firmware is built for one device at a time. `main/build_id.h` says which, and the
+`#if ESP32_(n)` blocks in `main/ultra_espnow_gw.c` hold each device's settings - pick the block
+that matches your board, or add one. for the ESP32-S3-ETH board `sdkconfig.defaults` is set up
+for, device 87 for example:
 
-        idf.py -p /dev/ttyUSB0 flash monitor
+    // main/build_id.h
+    #pragma once
+    #define PROJECT "ultra-espnow-gw"
+    #define ENTITY  87
+    #define SERNO   "0001"
+    #define MYDATE  "26-10-01"
 
-- `buildit.cfg` holds the per-device settings used by the author's build driver
+then build and flash with that file forced into every compile:
+
+    OPTS_="-include $PWD/main/build_id.h" idf.py -p /dev/ttyUSB0 build flash monitor
+
+- `OPTS_` is read when cmake first configures the build: after changing it, remove `build/`
+- `SERNO` is the firmware version the OTA update check compares (hex), `MYDATE` a free label
+- the `ethernet_init` component comes from the ESP-IDF ethernet example, see
+  `main/idf_component.yml`
+- `buildit.cfg` holds the per-device settings of the author's own build driver, which writes
+  `main/build_id.h` by itself
 
 notes
 -----
