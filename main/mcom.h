@@ -1361,7 +1361,7 @@ host9  name_accesspoint6      pass_accesspoint2...    2G  TETHER_SSID # <-- wire
 #define CC2STR(a) (a)[0], (a)[1], (a)[2]
 #define CCSTR "%c%c%c"
 
-_i8p accpts[] = {
+_i8cp accpts[] = {
     NA_SSID_STR,        NA_PASSWORD_STR,        //  0                 
     U2FIRE_SSID_STR,    U2FIRE_PASSWORD_STR,    //  1  
     ROTA2I_SSID_STR,    ROTA2I_PASSWORD_STR,    //  2  
@@ -1838,7 +1838,7 @@ if (wait) {
 #include "esp_https_ota.h"      // required for esp_https_ota_config_t in mcom.h
 
 #ifndef URL_FW_DIR      /* -DURL_FW_DIR=... overrides it, for the http/https A-B */
-#define URL_FW_DIR _w1("http://example.com/")
+#define URL_FW_DIR "http://example.com/"
 #endif
 
 #ifdef OTA_MTLS
@@ -2166,8 +2166,8 @@ TP05
 #else
             PR06("FW UPGRADE via WIFI_CLIENT\n");
 #ifdef MCOM_ARD
-            extern _i32 init_3rd(_u8, _i8p);
-            if (init_3rd(OTA_SSID, _w1(__FILE__))) {
+            extern _i32 init_3rd(_u8, _i8cp);
+            if (init_3rd(OTA_SSID, __FILE__)) {
 #else
             extern esp_err_t ur_connect(_u8, bool, _u32, _u32);
             if (ur_connect(OTA_SSID, WIFI_CONN_WAIT, WIFI_CONN_SLOW_FAIL, WIFI_PS_NONE)) { //}
@@ -2227,13 +2227,13 @@ regmatch_t _pmatch[7];  // nr of parenthesized subexprs in STATUS_MATCH + 1
  */
 // ']' is escaped differently in l7.awklib:
 //              "^#\\[([^\\]]+)\\]" 
-_i8p STATUS_MATCH =
-            _w1("^#\\[([^]]+)\\]" \
+_i8cp STATUS_MATCH =
+            "^#\\[([^]]+)\\]" \
                  "#\\[([01])\\]" \
                  "#\\[([01])\\]" \
                  "#\\[([a-z0-9]+)\\]" \
                  "#\\[([^()]+)\\]" \
-                 "#\\[([01])\\]$");
+                 "#\\[([01])\\]$";
 
 // encodings in misc subfield of status (must match pq.awklib):
 // 252 (was STATUS_MISC_DUPLICATE) is RETIRED - it existed while the gateways still had to
@@ -2250,19 +2250,19 @@ _i8p STATUS_MATCH =
 #define STAT_STAT 6
 // ---^^^--- STATUS encodings ---^^^---
 
-_i8p _err[] = {
-    _w1("ok"),      // sample text
+_i8cp _err[] = {
+    "ok",      // sample text
 
     // this module
-    _w1("err#1"),   // no WiFi conn (so no status)   
-    _w1("err#2"),   // no target conn (so no status)
-    _w1("err#3"),   // conn but no status          
-    _w1("err#4"),   // wrong status format        
-    _w1("err#5"),   // status nok                     
+    "err#1",   // no WiFi conn (so no status)   
+    "err#2",   // no target conn (so no status)
+    "err#3",   // conn but no status          
+    "err#4",   // wrong status format        
+    "err#5",   // status nok                     
 
     // others          
-    _w1("err#6"),   // temp conversion not complete
-    _w1("err#7"),   // temp not plausible
+    "err#6",   // temp conversion not complete
+    "err#7",   // temp not plausible
 };
 
 #endif  // if defined(WIFI_INITIATOR) || defined(ESPNOW_INITIATOR) || defined(ETH_INITIATOR)
@@ -2816,7 +2816,7 @@ WiFiClient target;
  *    status nok                    "err#5"   5     0101
  */
 _i32
-mysend(_i8p cmd, _i8p host, _u16 port, _i8p *statmsg)
+mysend(_i8cp cmd, _i8cp host, _u16 port, _i8cp *statmsg)
 {
 TP05
 
@@ -3192,7 +3192,7 @@ TP05
 }
 
 _i32
-init_3rd(_u8 ssid, _i8p prg) 
+init_3rd(_u8 ssid, _i8cp prg) 
 {
 TP05
     WiFi.onEvent(WiFiEvent);    // register all WiFi events
@@ -4211,7 +4211,7 @@ SemaphoreHandle_t mysend_lock = 0;
 #define MYSEND_UNLOCK() do { if (mysend_lock) xSemaphoreGive(mysend_lock); } while (0)
 
 _i32
-mysend(_i8p cmd, _i8p host, _u16 port, _i8p *statmsg)
+mysend(_i8cp cmd, _i8cp host, _u16 port, _i8p *statmsg)
 {
 TP05
     _i32 stat, err;

@@ -17,7 +17,7 @@
 #   define WIFI_INITIATOR
 
 #   define OTA_SSID UFIRE_SSID
-#   define STD_TARGET_HOST _w1("host2.example.com")
+#   define STD_TARGET_HOST "host2.example.com"
 #   define STD_TARGET_PORT 8888
 
 
@@ -223,7 +223,7 @@
 #endif
 
 // pre-ack default status
-#define STAT_OK     (_w1("#[XX]#[0]#[0]#[xxx]#[0]#[0]\n"))
+#define STAT_OK     ("#[XX]#[0]#[0]#[xxx]#[0]#[0]\n")
 
 /* ---vvv--- crash forensics ---vvv---------------------------------------------------------------- */
 /*
@@ -437,7 +437,7 @@ PR00("peer table flushed: %d -> %d\n", pn.total_num, (esp_now_get_peer_num(&pn) 
  * a host zero string denotes the cmd wants to be sent to STD_TARGET_HOST via WiFi (and to the given non zero host otherwise)
  */
 _i32
-forward_cmd(_i8p cmd, _i8p host, _u16 port, _i8p *statmsg_p)
+forward_cmd(_i8cp cmd, _i8cp host, _u16 port, _i8p *statmsg_p)
 {
 TP05
     _i8 stat = 0;
@@ -503,7 +503,7 @@ regmatch_t br_pmatch[BR_PMATCH_INDX];  // nr of parenthesized subexprs + 1
 
 // all \ in bash (of tcp_server on host7) must be escaped twice \\ in C
 // MUST MATCH host7 !! CHECK host7:/root/bin/tcp_server
-_i8p BR_CMD_MATCH = _w1("^([^^]+)( \\^(([^^:0-9][^^:]+)|([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+))(:([0-9]+))?)?( \\^([0-9]+)R?)?( \\^([0-9]+)S)?( \\^)?$");
+_i8cp BR_CMD_MATCH = "^([^^]+)( \\^(([^^:0-9][^^:]+)|([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+))(:([0-9]+))?)?( \\^([0-9]+)R?)?( \\^([0-9]+)S)?( \\^)?$";
 //                        |           |                                                       |                |                |          |
 //                        BR_CMD      |                                                       |                |                |          |
 //                        1           BR_HOST                                                 |                |                |          |
@@ -614,15 +614,15 @@ PR05("%s\n", br_regbuf);
                  * what works:
                  *
                  *      - multi-antenna pre-acked cmds by tcp_server
-                 *          { ESPNOW_SSID, ESPNOW_TARGET_HOST, ESPNOW_TARGET_PORT, _w1("@beep= f:1000 c:1 t:.05 p:.25 g:-20 ^host1.example.com:8888 ^") } // <= pre-acked by tcp_server
+                 *          { ESPNOW_SSID, ESPNOW_TARGET_HOST, ESPNOW_TARGET_PORT, "@beep= f:1000 c:1 t:.05 p:.25 g:-20 ^host1.example.com:8888 ^" } // <= pre-acked by tcp_server
                  *
                  *      - multi-antenna non-pre-acked cmds via non-tcp_server
-                 *          { ESPNOW_SSID, ESPNOW_TARGET_HOST, ESPNOW_TARGET_PORT, _w1("@beep= f:1000 c:1 t:.05 p:.25 g:-20 ^host1.example.com:8888") }   // <= directed to non-tcp_server
+                 *          { ESPNOW_SSID, ESPNOW_TARGET_HOST, ESPNOW_TARGET_PORT, "@beep= f:1000 c:1 t:.05 p:.25 g:-20 ^host1.example.com:8888" }   // <= directed to non-tcp_server
                  *
                  * what is NOT tested:
                  *
                  *      - multi-antenna non-pre-acked cmds via tcp_server
-                 *          { ESPNOW_SSID, ESPNOW_TARGET_HOST, ESPNOW_TARGET_PORT, _w1("@beep= f:1000 c:1 t:.05 p:.25 g:-20") }                     // <= NOT pre-acked by tcp_server
+                 *          { ESPNOW_SSID, ESPNOW_TARGET_HOST, ESPNOW_TARGET_PORT, "@beep= f:1000 c:1 t:.05 p:.25 g:-20" }                     // <= NOT pre-acked by tcp_server
                  *
                  *      <== BUT NOT SUPPORTED ANYWAYS:
                  *          26-07-05 17:48:01 no valid p-cmd ^@beep= f:1000 c:1 t:.05 p:.25 g:-20^
@@ -678,9 +678,9 @@ PR05("%s\n", br_regbuf);
                  *      
                  * test_case_t test_case[] = {}
                  * 
-                 * { ESPNOW_SSID, ESPNOW_TARGET_HOST,     ESPNOW_TARGET_PORT, _w1("@beep= f:1000 c:1 t:.05 p:.25 g:-20 ^host1.example.com:8888") },  // p-process does not work well with fast multi cmds in a row
-                 * { ESPNOW_SSID, ESPNOW_TARGET_HOST,     ESPNOW_TARGET_PORT, _w1("no ^host1.example.com:8899") },                                   // non-pre-acked, no req rel stat
-                 * { ESPNOW_SSID, ESPNOW_TARGET_HOST,     ESPNOW_TARGET_PORT, _w1("np ^host1.example.com:8899") },                                   // non-pre-acked, req rel stat
+                 * { ESPNOW_SSID, ESPNOW_TARGET_HOST,     ESPNOW_TARGET_PORT, "@beep= f:1000 c:1 t:.05 p:.25 g:-20 ^host1.example.com:8888" },  // p-process does not work well with fast multi cmds in a row
+                 * { ESPNOW_SSID, ESPNOW_TARGET_HOST,     ESPNOW_TARGET_PORT, "no ^host1.example.com:8899" },                                   // non-pre-acked, no req rel stat
+                 * { ESPNOW_SSID, ESPNOW_TARGET_HOST,     ESPNOW_TARGET_PORT, "np ^host1.example.com:8899" },                                   // non-pre-acked, req rel stat
                  *
                  *
                  */
@@ -836,15 +836,15 @@ PR01("GWTIME q%luus f%luus d%lu\n", (unsigned long)q_wait, (unsigned long)fwd, (
 
 _i32 regerr;
 _i8 regbuf[128];
-_i8p CMD_MATCH =
-    _w1( \
+_i8cp CMD_MATCH =
+     \
     "^@([^ =]+)=([^ =]+)$" "|" \
     "^@([^ =]+)$"          "|" \
     "^(OTA)$"              "|" \
     "^(BOOT)$"              "|" \
     "^(ON)$"               "|" \
     "^(OFF)$"                  \
-    );
+    ;
 regex_t regex;
 regmatch_t pmatch[PMATCH_INDX];  // nr of parenthesized subexprs + 1
 
@@ -891,9 +891,7 @@ TP05
             close(listen_sock);
             CONTINUE("listen failed\n");
         }
-#if DEBUG > 2
         PR05("listening on port %d\n", MYSERVICE_PORT);
-#endif
         while (1) {
             addr_len = _SZ(client_addr);
             client_sock = accept(listen_sock, (struct sockaddr *)&client_addr, &addr_len);
@@ -904,9 +902,7 @@ TP05
                 break;      // to a fresh listen socket - a CONTINUE here would accept() on the closed one forever
             }
 ledact(1);
-#if DEBUG > 2
             PR05("new client connected\n");
-#endif
             struct timeval tv = { .tv_sec = RECV_TIMEOUT, .tv_usec = 0 };   // a client that never sends must not hold the port
             setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &tv, _SZ(tv));
 
@@ -931,9 +927,7 @@ ledact(1);
             _i8 val[64];
             _i8 misc[96];   // crash_misc_str() needs the room, see there
             _u8 stat = 0;
-#if DEBUG > 2
             PR05("<%s>\n", buf);
-#endif
             if (regerr = regexec(&regex, buf, _NE(pmatch), pmatch, 0)) {
                 // no match
                 regerror(regerr, &regex, regbuf, _SZ(regbuf));
@@ -975,9 +969,7 @@ PR05("illegal cmd\n");
             statusStr(cmd, stat, misc, buf, _SZ(buf));
             send(client_sock, buf, strlen(buf), 0);
             close(client_sock);
-#if DEBUG > 2
             PR05("client disconnected\n");
-#endif
 ledact(0);
             /*
              * delay execution to allow sending status in advance
@@ -1051,32 +1043,24 @@ TP05
     while (1) {
         if (!saved_gw) {
             if (*gw_ip && strcmp(gw_ip, "0")) {
-#if DEBUG > 2
                 PR05("save gw [%s]--------------------------------------------------\n", gw_ip);
-#endif
                 saved_gw = ipaddr_addr(gw_ip);
             } else {
-#if DEBUG > 2
                 PR05("gw not yet saved----------------------------------------------\n");
-#endif
             }
         } else {
             if (!ping_gateway(saved_gw)) {
 
 #if !defined(__HARD_RECONNECT_VERSION__)
 
-#if DEBUG > 2
                 PR05("Network dead → now reconnect----------------------------------\n");
-#endif
                 esp_wifi_disconnect();
                 vTaskDelay(pdMS_TO_TICKS(500));
                 esp_wifi_connect();
 
 #else   // if !defined(__HARD_RECONNECT_VERSION__)
 
-#if DEBUG > 2
                 PR05("Network dead → now reboot-------------------------------------\n");
-#endif
                 vTaskDelay(pdMS_TO_TICKS(2000));
                 __i32 skip_fw_update = 0;
                 SET_NVS(skip_fw_update, 1); // hack to avoid FW upgrade attempt
