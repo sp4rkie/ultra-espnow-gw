@@ -12,7 +12,7 @@
  * setting xxx_INITIATOR defines the way the packets are forwarded
  */
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#if ESP32_(37)        // # esp32-37 _192.168.0.24 aa:bb:cc:00:00:01   ultra_espnow_gw/       ESPNOW_USY_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #3 botland (host13 garage)
+#if ESP32_(37)        // # esp32-37 _192.168.0.23 aa:bb:cc:00:00:01   ultra_espnow_gw/       ESPNOW_USY_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #3 botland (host13 garage)
 #   define DEBUG 1
 #   define WIFI_INITIATOR
 
@@ -22,8 +22,8 @@
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#elif ESP32_(41) || ESP32_(69)  // # esp32-41 192.168.0.25   aa:bb:cc:00:00:02   ultra_espnow_gw/       *** ESPNOW_001_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #2 botland
-                                // # esp32-69 192.168.0.26   aa:bb:cc:00:00:04   ultra_espnow_gw/       *** ESPNOW_002_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #4 botland
+#elif ESP32_(41) || ESP32_(69)  // # esp32-41 192.168.0.24   aa:bb:cc:00:00:02   ultra_espnow_gw/       *** ESPNOW_001_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #2 botland
+                                // # esp32-69 192.168.0.25   aa:bb:cc:00:00:04   ultra_espnow_gw/       *** ESPNOW_002_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #4 botland
 #   define DEBUG 1
 #   define WIFI_INITIATOR
 
@@ -172,8 +172,8 @@
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// # esp32-41 192.168.0.25   aa:bb:cc:00:00:02   ultra_espnow_gw/       *** ESPNOW_001_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #2 botland
-// # esp32-69 192.168.0.26   aa:bb:cc:00:00:04   ultra_espnow_gw/       *** ESPNOW_002_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #4 botland
+// # esp32-41 192.168.0.24   aa:bb:cc:00:00:02   ultra_espnow_gw/       *** ESPNOW_001_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #2 botland
+// # esp32-69 192.168.0.25   aa:bb:cc:00:00:04   ultra_espnow_gw/       *** ESPNOW_002_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #4 botland
 // # esp32-44 192.168.0.12   aa:bb:cc:00:00:03   ultra_espnow_gw/       ESPNOW_TOH_GW_MAC seed studio XIAO ESP32-S3 8 MB PSRAM/ 8 MB Flash #1 botland (media room)
 #elif ESP32_(41) || ESP32_(69) || ESP32_(44)
 #define LED_PIN1    (gpio_num_t)21      // yellow       // active low
